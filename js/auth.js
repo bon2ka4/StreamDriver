@@ -27,12 +27,7 @@ export class AuthService {
     }
 
     login() {
-        if (this.accessToken) {
-            // Check if token is still valid (simplified)
-            if (this.onAuthChange) this.onAuthChange(this.accessToken);
-            return;
-        }
-        this.tokenClient.requestAccessToken({ prompt: 'consent' });
+        this.tokenClient.requestAccessToken({ prompt: 'select_account' });
     }
 
     logout() {
