@@ -11,9 +11,13 @@ export class PlayerService {
         });
         this.player.media.preload = 'auto';
         this.modal = document.getElementById('player-modal');
+        this.currentFileId = null;
+
+        document.getElementById('use-google-player-btn').onclick = () => this.useGooglePlayer();
     }
 
     play(file, streamUrl, tracks) {
+        this.currentFileId = file.id;
         this.player.source = {
             type: 'video',
             title: file.name,
@@ -59,11 +63,34 @@ export class PlayerService {
         downloadLink.href = streamUrl;
     }
 
+    useGooglePlayer() {
+        if (!this.currentFileId) return;
+        
+        const googlePlayer = document.getElementById('google-player');
+        const fallback = document.getElementById('player-fallback');
+        const plyrContainer = document.querySelector('.plyr');
+
+        // Hide Plyr and Fallback
+        if (plyrContainer) plyrContainer.style.display = 'none';
+        fallback.style.display = 'none';
+
+        // Show and set Iframe
+        googlePlayer.style.display = 'block';
+        googlePlayer.src = `https://drive.google.com/file/d/${this.currentFileId}/preview`;
+    }
+
     close() {
         if (this.loadTimeout) clearTimeout(this.loadTimeout);
         this.player.stop();
         this.modal.style.display = 'none';
+        
+        // Reset UI
         document.getElementById('player-fallback').style.display = 'none';
+        document.getElementById('google-player').style.display = 'none';
+        document.getElementById('google-player').src = '';
+        const plyrContainer = document.querySelector('.plyr');
+        if (plyrContainer) plyrContainer.style.display = 'block';
+        
         this.player.source = {}; // Clear source
     }
 
