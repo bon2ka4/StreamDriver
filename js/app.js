@@ -16,28 +16,40 @@ class App {
 
     async init() {
         console.log('StreamDriver Init - Client ID:', CONFIG.CLIENT_ID);
-        // Initialize Icons
-        lucide.createIcons();
+        
+        try {
+            // Initialize Icons
+            if (typeof lucide !== 'undefined') lucide.createIcons();
 
-        // Initialize Services
-        await this.auth.init();
-        this.player = new PlayerService();
+            // Initialize Services
+            if (typeof google !== 'undefined') {
+                await this.auth.init();
+            } else {
+                console.error('Google SDK not loaded');
+            }
+            
+            this.player = new PlayerService();
 
-        // Bind Events
-        this.bindEvents();
+            // Bind Events
+            this.bindEvents();
 
-        // Check if already logged in
-        if (this.auth.accessToken) {
-            this.handleAuthSuccess();
+            // Check if already logged in
+            if (this.auth.accessToken) {
+                this.handleAuthSuccess();
+            }
+
+            this.updateApiStatus();
+        } catch (error) {
+            console.error('Initialization error:', error);
+            // Don't let it hang, show app anyway
+        } finally {
+            // Luôn ẩn loading sau khi xong hoặc lỗi
+            setTimeout(() => {
+                const loader = document.getElementById('loading-screen');
+                if (loader) loader.style.display = 'none';
+                document.getElementById('app').classList.add('loaded');
+            }, 800);
         }
-
-        this.updateApiStatus();
-
-        // Hide loading
-        setTimeout(() => {
-            document.getElementById('loading-screen').style.display = 'none';
-            document.getElementById('app').classList.add('loaded');
-        }, 1000);
     }
 
     updateApiStatus() {
