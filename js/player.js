@@ -1,16 +1,15 @@
 export class PlayerService {
     constructor() {
         this.player = new Plyr('#player', {
-            controls: [
-                'play-large', 'play', 'progress', 'current-time', 'duration',
-                'mute', 'volume', 'captions', 'settings', 'pip', 'airplay', 'fullscreen'
-            ],
+            controls: ['play-large', 'play', 'progress', 'current-time', 'duration', 'mute', 'volume', 'captions', 'settings', 'pip', 'airplay', 'fullscreen'],
             settings: ['captions', 'quality', 'speed'],
-            quality: {
-                default: 1080,
-                options: [4320, 2880, 2160, 1440, 1080, 720, 540, 480, 360, 240]
-            }
+            speed: { selected: 1, options: [0.5, 0.75, 1, 1.25, 1.5, 2] },
+            tooltips: { controls: true, seek: true },
+            // Tối ưu Buffer
+            loadSprite: true,
+            iconPrefix: 'plyr'
         });
+        this.player.media.preload = 'auto';
         this.modal = document.getElementById('player-modal');
     }
 
