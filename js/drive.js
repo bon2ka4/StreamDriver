@@ -45,6 +45,17 @@ export class DriveService {
         return await response.json();
     }
 
+    async fetchSubtitles(fileId) {
+        try {
+            // Tìm các file phụ đề có liên quan hoặc trong cùng folder
+            // Hiện tại em trả về mảng rỗng để fix lỗi trước, Đại Ca có thể nâng cấp tìm file .srt sau
+            return [];
+        } catch (error) {
+            console.error('Error fetching subtitles:', error);
+            return [];
+        }
+    }
+
     getStreamUrl(fileId) {
         return `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media&access_token=${this.authService.accessToken}`;
     }
