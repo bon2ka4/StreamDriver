@@ -66,15 +66,15 @@ export class PlayerService {
     useGooglePlayer() {
         if (!this.currentFileId) return;
         
-        const url = `https://drive.google.com/file/d/${this.currentFileId}/preview`;
-        const width = 1000;
-        const height = 600;
+        const url = `https://drive.google.com/file/d/${this.currentFileId}/view`;
+        const width = 1100;
+        const height = 700;
         const left = (window.innerWidth - width) / 2;
         const top = (window.innerHeight - height) / 2;
         
         window.open(url, 'StreamDriverPlayer', `width=${width},height=${height},left=${left},top=${top},menubar=no,toolbar=no,location=no,status=no`);
         
-        this.close(); // Đóng modal hiện tại sau khi mở pop-up
+        this.close();
     }
 
     close() {
