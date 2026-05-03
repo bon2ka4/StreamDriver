@@ -29,9 +29,15 @@ export class PlayerService {
 
         // Bổ sung bắt lỗi khi video không load được
         const videoElement = document.getElementById('player');
+        const fallback = document.getElementById('player-fallback');
+        const downloadLink = document.getElementById('download-link');
+
+        fallback.style.display = 'none'; // Reset fallback
+
         videoElement.onerror = () => {
-            console.error('Video load error. URL may be invalid or expired.');
-            alert('Không thể tải video. Có thể do định dạng file không được hỗ trợ hoặc link đã hết hạn. Đại Ca thử file .mp4 khác xem sao nhé!');
+            console.error('Video load error');
+            fallback.style.display = 'flex';
+            downloadLink.href = streamUrl;
         };
 
         this.modal.style.display = 'flex';
@@ -41,6 +47,7 @@ export class PlayerService {
     close() {
         this.player.stop();
         this.modal.style.display = 'none';
+        document.getElementById('player-fallback').style.display = 'none';
         this.player.source = {}; // Clear source
     }
 

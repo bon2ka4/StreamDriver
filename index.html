@@ -127,6 +127,16 @@
             </div>
             <div id="player-container">
                 <video id="player" playsinline controls></video>
+                <div id="player-fallback" style="display: none; position: absolute; inset: 0; background: rgba(0,0,0,0.9); flex-direction: column; align-items: center; justify-content: center; gap: 20px; text-align: center; padding: 20px;">
+                    <i data-lucide="alert-triangle" style="width: 60px; height: 60px; color: #facc15;"></i>
+                    <div>
+                        <h3 style="margin-bottom: 10px;">Định dạng file không hỗ trợ stream!</h3>
+                        <p style="color: var(--text-dim); font-size: 0.9rem;">Trình duyệt không thể giải mã file này (thường là .mkv).<br>Đại Ca vui lòng tải về để xem bằng VLC nhé!</p>
+                    </div>
+                    <a id="download-link" href="#" target="_blank" style="padding: 12px 30px; background: var(--primary-color); color: white; border-radius: 10px; font-weight: 600; text-decoration: none; display: flex; align-items: center; gap: 10px;">
+                        <i data-lucide="download"></i> Tải về máy ngay
+                    </a>
+                </div>
             </div>
         </div>
 
