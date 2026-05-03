@@ -18,7 +18,30 @@
     <div id="loading-screen">
         <span class="loader"></span>
         <p style="color: var(--text-dim); font-weight: 500;">Khởi tạo hệ thống...</p>
+        <div id="error-log" style="display: none; color: #ef4444; font-size: 0.8rem; margin-top: 20px; max-width: 80%; word-break: break-all; background: rgba(0,0,0,0.5); padding: 10px; border-radius: 8px;"></div>
     </div>
+    
+    <script>
+        // Cứu hộ: Sau 3 giây phải ẩn loading dù có chuyện gì xảy ra
+        setTimeout(() => {
+            const loader = document.getElementById('loading-screen');
+            if (loader && loader.style.display !== 'none') {
+                console.warn('Safety timeout triggered for loading screen');
+                loader.style.display = 'none';
+                document.getElementById('app').classList.add('loaded');
+            }
+        }, 3000);
+
+        // Hiển thị lỗi ra màn hình để Đại Ca check
+        window.onerror = function(msg, url, line) {
+            const errorLog = document.getElementById('error-log');
+            if (errorLog) {
+                errorLog.style.display = 'block';
+                errorLog.innerHTML = `Lỗi: ${msg}<br>Tại: ${line}`;
+            }
+            return false;
+        };
+    </script>
 
     <div id="app">
         <header>
