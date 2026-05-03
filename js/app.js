@@ -15,6 +15,7 @@ class App {
     }
 
     async init() {
+        console.log('StreamDriver Init - Client ID:', CONFIG.CLIENT_ID);
         // Initialize Icons
         lucide.createIcons();
 
