@@ -31,6 +31,8 @@ class App {
             this.handleAuthSuccess();
         }
 
+        this.updateApiStatus();
+
         // Hide loading
         setTimeout(() => {
             document.getElementById('loading-screen').style.display = 'none';
@@ -38,9 +40,24 @@ class App {
         }, 1000);
     }
 
+    updateApiStatus() {
+        const dot = document.getElementById('status-dot');
+        const text = document.getElementById('api-status');
+        
+        if (CONFIG.CLIENT_ID.includes('YOUR_CLIENT_ID')) {
+            dot.style.background = '#ef4444';
+            text.innerHTML = '<span id="status-dot" style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #ef4444; margin-right: 8px;"></span> API chưa cấu hình! Vui lòng nhấn <b>Cấu hình thủ công</b>.';
+        } else {
+            dot.style.background = '#22c55e';
+            text.innerHTML = '<span id="status-dot" style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #22c55e; margin-right: 8px;"></span> API đã sẵn sàng. Chào mừng Đại Ca!';
+        }
+    }
+
     bindEvents() {
-        document.getElementById('login-btn').onclick = () => this.auth.login();
+        document.getElementById('main-login-btn').onclick = () => this.auth.login();
+        document.getElementById('logout-btn').onclick = () => this.auth.logout();
         document.getElementById('close-player-btn').onclick = () => this.player.close();
+        document.getElementById('open-config-btn').onclick = () => this.toggleSettings(true);
 
         this.auth.onAuthChange = (token) => {
             if (token) this.handleAuthSuccess();
@@ -49,6 +66,37 @@ class App {
 
         document.getElementById('nav-my-drive').onclick = () => this.switchView('root', false);
         document.getElementById('nav-shared').onclick = () => this.switchView('root', true);
+        
+        // Settings Modal Events
+        document.getElementById('nav-settings').onclick = () => this.toggleSettings(true);
+        document.getElementById('close-settings-btn').onclick = () => this.toggleSettings(false);
+        document.getElementById('save-settings-btn').onclick = () => this.saveSettings();
+
+        // Check for missing credentials
+        if (!localStorage.getItem('manual_client_id') && CONFIG.CLIENT_ID.includes('YOUR_CLIENT_ID')) {
+            document.getElementById('setup-notice').style.display = 'block';
+        }
+    }
+
+    toggleSettings(show) {
+        const modal = document.getElementById('settings-modal');
+        modal.style.display = show ? 'flex' : 'none';
+        
+        if (show) {
+            document.getElementById('input-client-id').value = localStorage.getItem('manual_client_id') || '';
+            document.getElementById('input-api-key').value = localStorage.getItem('manual_api_key') || '';
+        }
+    }
+
+    saveSettings() {
+        const clientId = document.getElementById('input-client-id').value.trim();
+        const apiKey = document.getElementById('input-api-key').value.trim();
+
+        if (clientId) localStorage.setItem('manual_client_id', clientId);
+        if (apiKey) localStorage.setItem('manual_api_key', apiKey);
+
+        alert('Đã lưu cấu hình! Trang web sẽ tải lại để áp dụng.');
+        window.location.reload();
     }
 
     async switchView(folderId, isShared) {
@@ -64,16 +112,23 @@ class App {
     }
 
     async handleAuthSuccess() {
-        document.getElementById('login-btn').style.display = 'none';
+        document.getElementById('welcome-screen').style.display = 'none';
+        document.getElementById('main-layout').style.display = 'flex';
         document.getElementById('user-info').style.display = 'flex';
-        // You could fetch user info here using Google People API
+        
+        // Mock user data for now (or fetch from People API)
+        document.getElementById('user-name').innerText = 'Đại Ca Streamer';
+        document.getElementById('user-avatar').src = 'https://ui-avatars.com/api/?name=Dai+Ca&background=3b82f6&color=fff';
+        
         this.renderFileList();
     }
 
     handleLogout() {
-        document.getElementById('login-btn').style.display = 'block';
+        document.getElementById('welcome-screen').style.display = 'flex';
+        document.getElementById('main-layout').style.display = 'none';
         document.getElementById('user-info').style.display = 'none';
         document.getElementById('file-list').innerHTML = '';
+        this.updateApiStatus();
     }
 
     async renderFileList() {

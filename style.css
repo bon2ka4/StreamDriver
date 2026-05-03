@@ -292,14 +292,21 @@ aside {
     100% { transform: rotate(360deg); }
 }
 
-#loading-screen {
+/* Modal Overlay */
+.modal-overlay {
     position: fixed;
     inset: 0;
-    background: var(--bg-color);
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(15px);
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 20px;
-    z-index: 9999;
+    z-index: 1000;
+}
+
+.glass-panel {
+    background: rgba(20, 20, 20, 0.8);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(30px);
 }
