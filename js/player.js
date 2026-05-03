@@ -27,18 +27,20 @@ export class PlayerService {
             tracks: tracks
         };
 
-        // Bổ sung bắt lỗi khi video không load được
-        const videoElement = document.getElementById('player');
+        // Sử dụng this.player.media để truy cập trực tiếp vào thẻ video của Plyr
+        const videoElement = this.player.media;
         const fallback = document.getElementById('player-fallback');
         const downloadLink = document.getElementById('download-link');
 
         fallback.style.display = 'none'; // Reset fallback
 
-        videoElement.onerror = () => {
-            console.error('Video load error');
-            fallback.style.display = 'flex';
-            downloadLink.href = streamUrl;
-        };
+        if (videoElement) {
+            videoElement.onerror = () => {
+                console.error('Video load error');
+                fallback.style.display = 'flex';
+                downloadLink.href = streamUrl;
+            };
+        }
 
         this.modal.style.display = 'flex';
         this.player.play();
