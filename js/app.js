@@ -1,6 +1,7 @@
 import { AuthService } from './auth.js';
 import { DriveService } from './drive.js';
 import { PlayerService } from './player.js';
+import { CONFIG } from './config.js';
 
 class App {
     constructor() {
