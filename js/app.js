@@ -191,9 +191,10 @@ class App {
 
     async playVideo(file) {
         const streamUrl = this.drive.getStreamUrl(file.id);
+        const tracks = await this.drive.fetchSubtitles(file.id);
         // Ở phiên bản này, em đang lấy file gốc. 
         // Để có đa chất lượng (720, 1080), cần proxy hoặc xử lý sâu hơn.
-        this.player.play(streamUrl, file.name);
+        this.player.play(file, streamUrl, tracks);
     }
 
     formatSize(bytes) {

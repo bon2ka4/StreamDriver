@@ -14,24 +14,24 @@ export class PlayerService {
         this.modal = document.getElementById('player-modal');
     }
 
-    play(videoUrl, title, subs = []) {
+    play(file, streamUrl, tracks) {
         this.player.source = {
             type: 'video',
-            title: title,
+            title: file.name,
             sources: [
                 {
-                    src: videoUrl,
-                    type: 'video/mp4',
-                    size: 1080 // Default label
+                    src: streamUrl,
+                    type: file.mimeType,
                 }
             ],
-            tracks: subs.map(s => ({
-                kind: 'captions',
-                label: s.label,
-                srclang: s.lang,
-                src: s.url,
-                default: s.isDefault
-            }))
+            tracks: tracks
+        };
+
+        // Bổ sung bắt lỗi khi video không load được
+        const videoElement = document.getElementById('player');
+        videoElement.onerror = () => {
+            console.error('Video load error. URL may be invalid or expired.');
+            alert('Không thể tải video. Có thể do định dạng file không được hỗ trợ hoặc link đã hết hạn. Đại Ca thử file .mp4 khác xem sao nhé!');
         };
 
         this.modal.style.display = 'flex';
@@ -42,5 +42,10 @@ export class PlayerService {
         this.player.stop();
         this.modal.style.display = 'none';
         this.player.source = {}; // Clear source
+    }
+
+    getStreamUrl(fileId, accessToken) {
+        // Sử dụng link trực tiếp từ Google Drive để tận dụng session của trình duyệt
+        return `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media&access_token=${accessToken}`;
     }
 }
