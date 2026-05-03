@@ -36,16 +36,31 @@ export class PlayerService {
         if (videoElement) {
             videoElement.onerror = () => {
                 console.error('Video load error');
-                fallback.style.display = 'flex';
-                downloadLink.href = streamUrl;
+                this.showFallback(streamUrl);
             };
+
+            // Hẹn giờ: Sau 5 giây nếu vẫn 00:00 thì báo lỗi luôn
+            this.loadTimeout = setTimeout(() => {
+                if (videoElement.duration === 0 || isNaN(videoElement.duration)) {
+                    console.warn('Video load timeout');
+                    this.showFallback(streamUrl);
+                }
+            }, 6000);
         }
 
         this.modal.style.display = 'flex';
         this.player.play();
     }
 
+    showFallback(streamUrl) {
+        const fallback = document.getElementById('player-fallback');
+        const downloadLink = document.getElementById('download-link');
+        fallback.style.display = 'flex';
+        downloadLink.href = streamUrl;
+    }
+
     close() {
+        if (this.loadTimeout) clearTimeout(this.loadTimeout);
         this.player.stop();
         this.modal.style.display = 'none';
         document.getElementById('player-fallback').style.display = 'none';
