@@ -66,17 +66,15 @@ export class PlayerService {
     useGooglePlayer() {
         if (!this.currentFileId) return;
         
-        const googlePlayer = document.getElementById('google-player');
-        const fallback = document.getElementById('player-fallback');
-        const plyrContainer = document.querySelector('.plyr');
-
-        // Hide Plyr and Fallback
-        if (plyrContainer) plyrContainer.style.display = 'none';
-        fallback.style.display = 'none';
-
-        // Show and set Iframe
-        googlePlayer.style.display = 'block';
-        googlePlayer.src = `https://drive.google.com/file/d/${this.currentFileId}/preview`;
+        const url = `https://drive.google.com/file/d/${this.currentFileId}/preview`;
+        const width = 1000;
+        const height = 600;
+        const left = (window.innerWidth - width) / 2;
+        const top = (window.innerHeight - height) / 2;
+        
+        window.open(url, 'StreamDriverPlayer', `width=${width},height=${height},left=${left},top=${top},menubar=no,toolbar=no,location=no,status=no`);
+        
+        this.close(); // Đóng modal hiện tại sau khi mở pop-up
     }
 
     close() {
@@ -86,8 +84,6 @@ export class PlayerService {
         
         // Reset UI
         document.getElementById('player-fallback').style.display = 'none';
-        document.getElementById('google-player').style.display = 'none';
-        document.getElementById('google-player').src = '';
         const plyrContainer = document.querySelector('.plyr');
         if (plyrContainer) plyrContainer.style.display = 'block';
         
